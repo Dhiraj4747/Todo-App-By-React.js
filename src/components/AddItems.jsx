@@ -1,9 +1,16 @@
-import { useState } from "react";
+import { useContext } from "react";
+import { TodoItemContext } from "../store/TodoItemContext";
+import { useRef } from "react";
 import { IoIosAddCircle } from "react-icons/io";
 
-function AddItems({ onNewItem }) {
-  let [newDate, setNewDate] = useState();
-  let [newName, setNewName] = useState();
+function AddItems() {
+
+  
+  const {handleNewItem,todoItem} = useContext(TodoItemContext)
+  
+
+  const todoItemNameref = useRef("");
+  const todiItemDuedate = useRef("");
 
   const handleName = (event) => {
     setNewName(event.target.value);
@@ -13,33 +20,40 @@ function AddItems({ onNewItem }) {
     setNewDate(event.target.value);
   };
 
-  const handleonNewItem = () => {
-    onNewItem(newName, newDate);
-    setNewName("");
-    setNewDate("");
+  const handleonNewItem = (event) => {
+    event.preventDefault();
+    const newName = todoItemNameref.current.value;
+    const newDate = todiItemDuedate.current.value;
+    handleNewItem(newName, newDate);
+    
   };
   return (
     <>
-      <div class="container text-center">
-        <div class="row justify-content-md-center">
-          <div class="row">
-            <div class="col">
-              <input
-                placeholder="Enter a item here"
-                value={newName}
-                onChange={handleName}
-              ></input>
+      <div className="container text-center">
+        <div className="row justify-content-md-center">
+          <form onSubmit={handleonNewItem}>
+            <div className="row">
+              <div className="col">
+                <input
+                  placeholder="Enter a item here"
+                  ref={todoItemNameref}
+                  
+                ></input>
+              </div>
+              <div className="col-3">
+                <input
+                  type="date"
+                  ref={todiItemDuedate}
+                  
+                />
+              </div>
+              <div className="col-1">
+                <button className="btn btn-warning" >
+                  <IoIosAddCircle />
+                </button>
+              </div>
             </div>
-            <div class="col-3">
-              <input type="date" value={newDate} onChange={handeleDate} />
-            </div>
-            <div class="col-1">
-              <button className="btn btn-warning" onClick={handleonNewItem}>
-              <IoIosAddCircle />
-
-              </button>
-            </div>
-          </div>
+          </form>
         </div>
       </div>
     </>
@@ -47,4 +61,3 @@ function AddItems({ onNewItem }) {
 }
 
 export default AddItems;
-
